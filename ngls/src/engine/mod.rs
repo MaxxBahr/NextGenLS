@@ -25,5 +25,5 @@ fn find_files(path: &Path, store: &mut HashSet<String>){
 }
 
 fn file_ending(path: String) -> bool{
-
+    return false;
 }

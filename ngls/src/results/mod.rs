@@ -5,6 +5,8 @@ pub struct Result{
     line: String
 }
 
+
+
 impl Result{
     pub fn new(path: String, size: i32, line: String) -> Result{
         Result { path, size, line }
