@@ -19,9 +19,9 @@ fn find_files(path: &Path, store: &mut HashSet<String>){
     let path_to_string = path.to_str().unwrap();
     //if path is a finite path to file
     //add file to hashset
-    match path_to_string.ends_with('.')
     //else
     //recall function until file is found
+    // make system calls 'readdir' and 'opendir'
 }
 
 fn file_ending(path: String) -> bool{
