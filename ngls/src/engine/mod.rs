@@ -25,5 +25,8 @@ fn find_files(path: &Path, store: &mut HashSet<String>){
 }
 
 fn file_ending(path: String) -> bool{
-    return false;
+    let mut splitter = path.split('/').collect::<Vec<&str>>();
+    let file_name = splitter.pop().unwrap();
+    let re = Regex::new(r"[a-zA-Z0-9]+\.[a-zA-Z0-9]+").unwrap();
+    return re.is_match(file_name);
 }
