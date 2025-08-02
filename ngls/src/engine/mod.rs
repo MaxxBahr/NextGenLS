@@ -29,10 +29,14 @@ fn collect_files(path: String) -> HashSet<String>{
 }
 
 fn find_files(path: String, store: &mut HashSet<String>){
-    let path_to_string = path;
     //if path is a finite path to file
-    //add file to hashset
-    //else
-    //recall function until file is found
-    // make system calls 'readdir' and 'opendir'
+    if path.file_ending(){
+        //add file to hashset
+        store.insert(path);
+    }
+    else{
+        //recall function until file is found
+        //https://github.com/rust-lang/libc/blob/main/README.md
+        find_files(path, store);
+    }
 }
