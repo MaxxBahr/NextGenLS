@@ -37,6 +37,8 @@ fn find_files(path: String, store: &mut HashSet<String>){
     else{
         //recall function until file is found
         //https://github.com/rust-lang/libc/blob/main/README.md
+        // https://docs.rs/libc/latest/libc/fn.opendir.html
+        let dir_contents: Vec<String> = Vec::new();
         find_files(path, store);
     }
 }
