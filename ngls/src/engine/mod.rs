@@ -1,14 +1,13 @@
-use std::ffi::CString;
-use std::{fs, path::Path};
 use std::collections::HashSet;
 use regex::Regex;
 use libc::{opendir, readdir, dirent, closedir};
+use crate::Result;
 
-pub trait file_ending {
+pub trait FileEnding {
     fn file_ending(&self) -> bool;
 }
 
-impl file_ending for String{
+impl FileEnding for String{
     fn file_ending(&self) -> bool{
         let mut splitter = self.split('/').collect::<Vec<&str>>();
         let file_name = splitter.pop().unwrap();
@@ -17,10 +16,18 @@ impl file_ending for String{
     }
 }
 
-pub fn search_function(path: String){
+pub fn search_function(path: String, keyword: String)-> Result{
     let contents = collect_files(path);
+    let mut result_string = String::new();
     //iterate over hashset
-    //
+    for file in contents{
+        //extract path of wanted file
+        if file.contains(&keyword){
+            result_string = file;
+            
+        }
+    }
+    return Result::default();
 
 }
 
