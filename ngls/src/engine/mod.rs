@@ -1,6 +1,6 @@
 use std::collections::HashSet;
 use regex::Regex;
-use libc::{opendir, readdir, dirent, closedir};
+use libc::{opendir, readdir, dirent, closedir, fopen};
 use crate::Result;
 
 pub trait FileEnding {
@@ -18,14 +18,15 @@ impl FileEnding for String{
 
 pub fn search_function(path: String, keyword: String)-> Result{
     let contents = collect_files(path);
-    let mut result_string = String::new();
     //iterate over hashset
-    for file in contents{
-        //extract path of wanted file
-        if file.contains(&keyword){
-            result_string = file;
+    for file_path in contents{
+        //open every found file
+        unsafe {
             
+            fopen(file_path.as_ptr()as const *i8,)
         }
+        //extract information of file
+        //return relevant file
     }
     return Result::default();
 
@@ -48,7 +49,7 @@ fn find_files(path: String, store: &mut HashSet<String>){
         //https://github.com/rust-lang/libc/blob/main/README.md
         // https://docs.rs/libc/latest/libc/fn.opendir.html
         unsafe { 
-            let c_path = std::ffi::CString::new(path).unwrap();
+            let c_path = std::ffi::CString::new(path.clone()).unwrap();
             let entries = opendir(c_path.as_ptr() as *const i8);
             if !entries.is_null() {
                 loop {
@@ -59,7 +60,8 @@ fn find_files(path: String, store: &mut HashSet<String>){
                     let dir_entry: &dirent = &*next_entry;
                     let c_str: &std::ffi::CStr = std::ffi::CStr::from_ptr(dir_entry.d_name.as_ptr());
                     let filename = c_str.to_string_lossy().into_owned();
-                    find_files(filename, store);
+                    let full_path = format!("{}/{}", path, filename);
+                    find_files(full_path, store);
                 }
                 closedir(entries);
             }
