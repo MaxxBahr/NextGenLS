@@ -1,6 +1,5 @@
 mod engine;
 mod results;
-mod cli;
 
 use crate::engine::search_function;
 use crate::results::Result;
