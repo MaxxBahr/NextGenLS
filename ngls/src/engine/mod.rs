@@ -1,7 +1,8 @@
-use std::collections::HashSet;
+use std::{collections::HashSet, fs};
 use regex::Regex;
-use libc::{opendir, readdir, dirent, closedir, fopen};
+use libc::{closedir, dirent, opendir, readdir};
 use crate::Result;
+use crate::results::Filesize;
 
 pub trait FileEnding {
     fn file_ending(&self) -> bool;
@@ -21,12 +22,16 @@ pub fn search_function(path: String, keyword: String)-> Result{
     //iterate over hashset
     for file_path in contents{
         //open every found file
-        unsafe {
-            
-            fopen(file_path.as_ptr()as const *i8,)
+        if let Ok(result) =  fs::read_to_string(file_path.clone()) {
+            if result.contains(&keyword){
+                for lines in result.lines(){
+                    //return relevant file
+                    return Result::new(file_path, 0, lines.to_string(), Filesize::KiB);
+                }
+            }
+        } else{
+            continue;
         }
-        //extract information of file
-        //return relevant file
     }
     return Result::default();
 

@@ -1,12 +1,12 @@
-#[derive(Default)]
-enum Filesize{
+#[derive(Default, Debug)]
+pub enum Filesize{
     #[default]
     Byte,
     KiB,
     MiB,
     GiB,
 }
-#[derive(Default)]
+#[derive(Default, Debug)]
 pub struct Result{
     path: String,
     size: i32,
