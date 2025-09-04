@@ -1,17 +1,37 @@
 use std::env;
 
-pub struct Arguments {
-    short: String,
-    long: String,
-    value: Option<String>
+pub fn choose_argument(argument: String){
+    match argument.replace("-", "").as_str(){
+        "l" | "line" => line(),
+        "s" | "short" => short(),
+        "cs" | "case_sensitive" => case_sensitive(),
+        "pp" | "pretty_print" => pretty_print(),
+        "k" | "keyword" => keyword(),
+        "ln" | "linesn" => lines_number(),
+        _ => ()
+    }
 }
 
-impl Arguments {
-    pub fn short(&mut self, value: String){
-        self.short = value;
-    }
+fn line(){
+    todo!()
+}
 
-    pub fn long(&mut self, value: String){
-        self.long = value;
-    }
+fn short(){
+    todo!()
+}
+
+fn case_sensitive(){
+    todo!()
+}
+
+fn pretty_print(){
+    todo!()
+}
+
+fn keyword(){
+    todo!()
+}
+
+fn lines_number(){
+    todo!()
 }
