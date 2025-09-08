@@ -1,6 +1,8 @@
-use std::env;
+use std::env::{self, Args};
 
-pub fn choose_argument(argument: String){
+pub fn choose_argument(){
+    let argument: Vec<String> = std::env::args().collect();
+
     match argument.replace("-", "").as_str(){
         "l" | "line" => line(),
         "s" | "short" => short(),
