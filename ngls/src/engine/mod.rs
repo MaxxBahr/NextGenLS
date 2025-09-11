@@ -50,26 +50,21 @@ fn find_files(path: String, store: &mut HashSet<String>){
         store.insert(path);
     }
     else{
-        //recall function until file is found
-        //https://github.com/rust-lang/libc/blob/main/README.md
-        // https://docs.rs/libc/latest/libc/fn.opendir.html
-        unsafe { 
-            let c_path = std::ffi::CString::new(path.clone()).unwrap();
-            let entries = opendir(c_path.as_ptr() as *const i8);
-            if !entries.is_null() {
-                loop {
-                    let next_entry = readdir(entries);
-                    if next_entry.is_null(){
-                        break;
-                    }
-                    let dir_entry: &dirent = &*next_entry;
-                    let c_str: &std::ffi::CStr = std::ffi::CStr::from_ptr(dir_entry.d_name.as_ptr());
-                    let filename = c_str.to_string_lossy().into_owned();
-                    let full_path = format!("{}/{}", path, filename);
-                    find_files(full_path, store);
-                }
-                closedir(entries);
+        let mut corrected_path: String = if path == ".".to_string(){
+            std::env::current_dir().unwrap().to_str().unwrap().to_string()
+        }else{
+            path.clone()
+        };
+        corrected_path = std::path::Path::new(corrected_path.as_str()).to_str().unwrap().to_string();
+        for entry in fs::read_dir(corrected_path).unwrap(){
+            let entry = entry.unwrap();
+            let path = entry.path();
+            let path_string = path.to_str().unwrap().to_string();
+            if path.is_dir(){
+                find_files(path_string, store);
+            }else{
+                store.insert(path_string);
             }
-         };
+        }
     }
 }

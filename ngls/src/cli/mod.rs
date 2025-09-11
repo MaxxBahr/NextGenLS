@@ -3,7 +3,7 @@ use std::env::{self, Args};
 pub fn choose_argument(){
     let argument: Vec<String> = std::env::args().collect();
 
-    match argument.replace("-", "").as_str(){
+    match argument[0].replace("-", "").as_str(){
         "l" | "line" => line(),
         "s" | "short" => short(),
         "cs" | "case_sensitive" => case_sensitive(),
