@@ -9,7 +9,7 @@ pub enum Filesize{
 #[derive(Default, Debug)]
 pub struct Result{
     path: String,
-    size: i32,
+    size: u64,
     line: String,
     filesize_unit: Filesize,
 }
@@ -17,7 +17,7 @@ pub struct Result{
 
 
 impl Result{
-    pub fn new(path: String, size: i32, line: String, filesize_unit: Filesize) -> Result{
+    pub fn new(path: String, size: u64, line: String, filesize_unit: Filesize) -> Result{
         Result { path, size, line, filesize_unit }
     }
 
@@ -28,11 +28,11 @@ impl Result{
                 self.filesize_unit = Filesize::KiB
             }
             "MiB" => {
-                self.size = self.size / i32::pow(1024, 2); 
+                self.size = self.size / u64::pow(1024, 2); 
                 self.filesize_unit = Filesize::MiB
             }
             "GiB" => {
-                self.size = self.size / i32::pow(1024, 3); 
+                self.size = self.size / u64::pow(1024, 3); 
                 self.filesize_unit = Filesize::GiB
             }
             _ => ()
