@@ -1,3 +1,4 @@
+use std::path::Path;
 use std::{collections::HashSet, fs};
 use regex::Regex;
 use libc::{closedir, dirent, opendir, readdir};
@@ -22,11 +23,16 @@ pub fn search_function(path: String, keyword: String)-> Result{
     //iterate over hashset
     for file_path in contents{
         //open every found file
+        let file_path_str = file_path.clone();
+        let path = Path::new(file_path_str.as_str());
+        let file_size = path.metadata().unwrap().len();
         if let Ok(result) =  fs::read_to_string(file_path.clone()) {
             if result.contains(&keyword){
                 for lines in result.lines(){
                     //return relevant file
-                    return Result::new(file_path, 0, lines.to_string(), Filesize::KiB);
+                    if lines.contains(&keyword){
+                        return Result::new(file_path, file_size, lines.to_string(), Filesize::KiB);
+                    }
                 }
             }
         } else{
