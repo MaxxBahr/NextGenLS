@@ -1,7 +1,6 @@
 use std::path::Path;
-use std::{collections::HashSet, fs};
+use std::{collections::HashSet, fs, io};
 use regex::Regex;
-use libc::{closedir, dirent, opendir, readdir};
 use crate::Result;
 use crate::results::Filesize;
 
@@ -18,6 +17,7 @@ impl FileEnding for String{
     }
 }
 
+// Main entry point of the engine
 pub fn search_function(path: String, keyword: String)-> Result{
     let contents = collect_files(path);
     //iterate over hashset
@@ -45,32 +45,34 @@ pub fn search_function(path: String, keyword: String)-> Result{
 
 fn collect_files(path: String) -> HashSet<String>{
     let mut result: HashSet<String> = HashSet::new();
-    find_files(path, &mut result);
+    let _ = find_files(path, &mut result);
     return result;
 }
 
-fn find_files(path: String, store: &mut HashSet<String>){
+fn find_files(path: String, store: &mut HashSet<String>)-> io::Result<()>{
     //if path is a finite path to file
     if path.file_ending(){
         //add file to hashset
         store.insert(path);
+        Ok(())
     }
     else{
         let mut corrected_path: String = if path == ".".to_string(){
-            std::env::current_dir().unwrap().to_str().unwrap().to_string()
+            std::env::current_dir()?.to_str().unwrap().to_string()
         }else{
             path.clone()
         };
         corrected_path = std::path::Path::new(corrected_path.as_str()).to_str().unwrap().to_string();
-        for entry in fs::read_dir(corrected_path).unwrap(){
-            let entry = entry.unwrap();
+        for entry in fs::read_dir(corrected_path)?{
+            let entry = entry?;
             let path = entry.path();
             let path_string = path.to_str().unwrap().to_string();
             if path.is_dir(){
-                find_files(path_string, store);
+                let _ = find_files(path_string, store);
             }else{
                 store.insert(path_string);
             }
         }
+        Ok(())
     }
 }
