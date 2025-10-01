@@ -14,7 +14,11 @@ pub struct Result{
     filesize_unit: Filesize,
 }
 
-
+impl std::fmt::Display for Result{
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{:<20} {:>10}{:?}", self.path, self.size, self.filesize_unit)
+    }
+}
 
 impl Result{
     pub fn new(path: String, size: u64, line: String, filesize_unit: Filesize) -> Result{
@@ -37,5 +41,25 @@ impl Result{
             }
             _ => ()
         }
+    }
+
+    pub fn line(&self){
+        println!("{}", self);
+        println!("According line: {}", self.line);
+    }
+
+    pub fn short(&self){
+        println!("{}", self);
+    }
+
+    pub fn pretty_print(&self){
+        println!("----------------------------------------------");
+        println!("{}", self);
+        println!("According line: {}", self.line);
+        println!("----------------------------------------------");
+    }
+
+    pub fn lines_number(&self){
+        todo!()
     }
 }

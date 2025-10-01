@@ -1,39 +1,12 @@
-use std::env::{self, Args};
+use crate::results::Result;
 
-pub fn choose_argument(){
+pub fn choose_argument(raw_result: Result){
     let argument: Vec<String> = std::env::args().collect();
-
     match argument[0].replace("-", "").as_str(){
-        "l" | "line" => line(),
-        "s" | "short" => short(),
-        "cs" | "case_sensitive" => case_sensitive(),
-        "pp" | "pretty_print" => pretty_print(),
-        "k" | "keyword" => keyword(),
-        "ln" | "linesn" => lines_number(),
+        "l" | "line" => raw_result.line(),
+        "s" | "short" => raw_result.short(),
+        "pp" | "pretty_print" => raw_result.pretty_print(),
+        "ln" | "linesn" => raw_result.lines_number(),
         _ => ()
     }
-}
-
-fn line(){
-    todo!()
-}
-
-fn short(){
-    todo!()
-}
-
-fn case_sensitive(){
-    todo!()
-}
-
-fn pretty_print(){
-    todo!()
-}
-
-fn keyword(){
-    todo!()
-}
-
-fn lines_number(){
-    todo!()
 }
