@@ -1,3 +1,5 @@
+use std::ffi::OsString;
+
 use crate::engine::search_function;
 use crate::results::Result;
 
@@ -12,7 +14,15 @@ pub fn choose_argument(raw_result: Result, argument: String){
 }
 
 pub fn get_arguments(){
-    let arguments: Vec<String> = std::env::args().collect();
+    let arguments: Vec<String> = std::env::args_os().map(|s| {
+        if let Ok(s) = s.into_string() {
+            s
+        }
+        else{
+            panic!("No valid arguments given");
+        }
+    })
+    .collect();
     let mut cleaned: Vec<String> = arguments.into_iter()
         .map(|s| {
         if s.starts_with('-'){
