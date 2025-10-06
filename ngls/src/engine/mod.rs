@@ -18,8 +18,9 @@ impl FileEnding for String{
 }
 
 // Main entry point of the engine
-pub fn search_function(path: String, keyword: String)-> Result{
+pub fn search_function(path: String, keyword: String)-> Vec<Result>{
     let contents = collect_files(path);
+    let mut search_results: Vec<Result> = Vec::new();
     //iterate over hashset
     for file_path in contents{
         //open every found file
@@ -31,7 +32,7 @@ pub fn search_function(path: String, keyword: String)-> Result{
                 for lines in result.lines(){
                     //return relevant file
                     if lines.contains(&keyword){
-                        return Result::new(file_path, file_size, lines.to_string(), Filesize::KiB);
+                        search_results.push(Result::new(file_path.clone(), file_size, lines.to_string(), Filesize::KiB)) ;
                     }
                 }
             }
@@ -39,7 +40,7 @@ pub fn search_function(path: String, keyword: String)-> Result{
             continue;
         }
     }
-    return Result::default();
+    return search_results;
 
 }
 

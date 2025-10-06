@@ -3,12 +3,12 @@ use std::ffi::OsString;
 use crate::engine::search_function;
 use crate::results::Result;
 
-pub fn choose_argument(raw_result: Result, argument: String){
+pub fn choose_argument(raw_result: Vec<Result>, argument: String){
     match argument.as_str(){
-        "l" | "line" => raw_result.line(),
-        "s" | "short" => raw_result.short(),
-        "pp" | "pretty_print" => raw_result.pretty_print(),
-        "ln" | "linesn" => raw_result.lines_number(),
+        "l" | "line" => for res in raw_result{ res.line()},
+        "s" | "short" => for res in raw_result{ res.short()},
+        "pp" | "pretty_print" => for res in raw_result{ res.pretty_print()},
+        "ln" | "linesn" => for res in raw_result{ res.lines_number()},
         _ => ()
     }
 }
@@ -33,9 +33,9 @@ pub fn get_arguments(){
     })
         .collect();
     let path = cleaned.remove(1);
-    let keyword = cleaned.remove(2);
+    let keyword = cleaned.remove(1);
     let found = search_function(path, keyword);
 
-    let print_argument: String = cleaned.remove(3);
-    choose_argument(found, print_argument);
+    let print_argument: String = cleaned.remove(1);
+    choose_argument(found, print_argument.clone());
 }
