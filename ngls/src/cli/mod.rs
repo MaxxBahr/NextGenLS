@@ -1,5 +1,3 @@
-use std::ffi::OsString;
-
 use crate::engine::search_function;
 use crate::results::Result;
 

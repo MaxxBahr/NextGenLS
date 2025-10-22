@@ -77,3 +77,7 @@ fn find_files(path: String, store: &mut HashSet<String>)-> io::Result<()>{
         Ok(())
     }
 }
+
+fn index_files(){
+    
+}

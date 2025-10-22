@@ -6,3 +6,4 @@ edition = "2024"
 [dependencies]
 regex = "1.11.1"
 libc = "0.2"
+chrono = "0.4.42"
