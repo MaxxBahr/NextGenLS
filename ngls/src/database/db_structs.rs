@@ -2,7 +2,10 @@ use std::collections::HashMap;
 use chrono::prelude::*;
 
 pub enum DbError{
-
+    ConnErr(String),
+    ValErr(String),
+    AuthErr(String),
+    AccErr(String)
 }
 enum MimeType{
     Html,

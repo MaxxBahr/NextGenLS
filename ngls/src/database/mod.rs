@@ -19,7 +19,9 @@ trait Write<T>{
 }
 
 trait Transactional {
-
+    fn begin_transaction(&mut self) -> Result<(), DbError>;
+    fn rollback(id: u64) -> Result<String, DbError>;
+    fn commit(&mut self)-> Result<(), DbError>;
 }
 
 trait Database<T>: Read<T> + Write<T> + Transactional {
