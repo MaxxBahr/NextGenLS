@@ -1,0 +1,31 @@
+@startuml
+actor User
+participant backend
+participant filesystem
+participant Database
+User -> backend: ngls
+activate backend
+backend -> filesystem: index()
+activate filesystem
+filesystem -> Database: index_results
+activate Database
+Database -[hidden]-> Database
+deactivate Database
+deactivate filesystem
+backend -> User: get_depth
+User --> backend: depth
+backend -> Database: depth
+activate Database
+Database --> backend: data_depthlevel
+deactivate Database
+backend --> User: show_entries
+Database -> Database: update
+activate Database
+Database -> backend: update
+backend -> filesystem: update
+activate filesystem
+filesystem -> Database: new_entries 
+deactivate filesystem
+deactivate Database
+deactivate backend
+@enduml
