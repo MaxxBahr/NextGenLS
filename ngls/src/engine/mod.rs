@@ -1,4 +1,6 @@
+use std::hash::{BuildHasherDefault, DefaultHasher};
 use std::path::Path;
+use std::sync::Mutex;
 use std::{collections::HashSet, fs, io};
 use regex::Regex;
 use crate::Result;
@@ -44,17 +46,20 @@ pub fn search_function(path: String, keyword: String)-> Vec<Result>{
 
 }
 
-fn collect_files(path: String) -> HashSet<String>{
-    let mut result: HashSet<String> = HashSet::new();
-    let _ = find_files(path, &mut result);
-    return result;
+unsafe fn collect_files(path: String) -> Mutex<HashSet<String, BuildHasherDefault<DefaultHasher>>>{
+    // Use different caller for HashSet since seed is not static this way
+    // https://doc.rust-lang.org/std/collections/struct.HashSet.html
+    static mut SET: Mutex<HashSet<String, BuildHasherDefault<DefaultHasher>>> = Mutex::new(HashSet::with_hasher(BuildHasherDefault::new()));
+    let _ = find_files(path, &mut SET);
+    return SET;
 }
 
-fn find_files(path: String, store: &mut HashSet<String>)-> io::Result<()>{
+fn find_files(path: String, store: &mut Mutex<HashSet<String, BuildHasherDefault<DefaultHasher>>>)-> io::Result<()>{
+    let mut locked_store = store.lock().unwrap();
     //if path is a finite path to file
     if path.file_ending(){
         //add file to hashset
-        store.insert(path);
+        locked_store.insert(path);
         Ok(())
     }
     else{
@@ -69,9 +74,12 @@ fn find_files(path: String, store: &mut HashSet<String>)-> io::Result<()>{
             let path = entry.path();
             let path_string = path.to_str().unwrap().to_string();
             if path.is_dir(){
-                let _ = find_files(path_string, store);
+                let handle = std::thread::spawn(move ||{
+                    let _ = find_files(path_string, store);
+                });
+                handle.join().unwrap();
             }else{
-                store.insert(path_string);
+                locked_store.insert(path_string);
             }
         }
         Ok(())
